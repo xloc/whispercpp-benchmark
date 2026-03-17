@@ -38,6 +38,7 @@ def main():
     parser.add_argument("audio", nargs="?", help="Path to an audio file (default: first audio file in script directory)")
     parser.add_argument("--model", default="base", metavar="MODEL", choices=AVAILABLE_MODELS, help="Whisper model name (default: base)")
     parser.add_argument("--runs", type=int, default=5, help="Number of timed runs (default: 5)")
+    parser.add_argument("--verbose", action="store_true", help="Show whisper.cpp logs (disabled by default)")
     args = parser.parse_args()
 
     audio = args.audio or find_default_audio()
@@ -50,7 +51,8 @@ def main():
     print(f"Runs:           {args.runs}")
     print("Loading model...")
 
-    model = Model(args.model, print_progress=False)
+    redirect = None if not args.verbose else "/dev/stderr"
+    model = Model(args.model, print_progress=False, redirect_whispercpp_logs_to=redirect)
 
     print("Benchmarking...")
     times = []
