@@ -1,0 +1,9 @@
+[project]
+name = "whispercpp-benchmark"
+version = "0.1.0"
+description = "Benchmark pywhispercpp inference speed across multiple runs"
+requires-python = ">=3.14"
+dependencies = [
+    "mutagen>=1.47.0",
+    "pywhispercpp>=1.4.1",
+]
