@@ -3,13 +3,17 @@ import statistics
 import timeit
 from pathlib import Path
 
-from mutagen import File
+import numpy as np
+import miniaudio
 from pywhispercpp.constants import AVAILABLE_MODELS
 from pywhispercpp.model import Model
 
 
-def get_audio_duration(path: str) -> float:
-    return File(path).info.length
+def load_audio(path: str) -> tuple[np.ndarray, float]:
+    decoded = miniaudio.decode_file(path, output_format=miniaudio.SampleFormat.FLOAT32, nchannels=1, sample_rate=16000)
+    samples = np.array(decoded.samples, dtype=np.float32)
+    duration = decoded.num_frames / 16000
+    return samples, duration
 
 
 def models_epilog() -> str:
@@ -45,7 +49,7 @@ def main():
     if audio is None:
         parser.error("no audio file provided and none found in script directory")
 
-    duration = get_audio_duration(audio)
+    audio_data, duration = load_audio(audio)
     print(f"Model:          {args.model}")
     print(f"Audio duration: {duration:.1f}s")
     print(f"Runs:           {args.runs}")
@@ -57,7 +61,7 @@ def main():
     print("Benchmarking...")
     times = []
     for i in range(args.runs):
-        t = timeit.timeit(lambda: model.transcribe(audio), number=1)
+        t = timeit.timeit(lambda: model.transcribe(audio_data), number=1)
         times.append(t)
         print(f"  Run {i + 1}: {t:.3f}s")
 
