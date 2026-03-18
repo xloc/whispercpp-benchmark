@@ -9,6 +9,7 @@ Reports per-run time and summary stats (mean, min, max, stdev).
 ```sh
 uv sync
 uv run main.py audio.mp3 --model small --runs 3
+uv run main.py --model=medium # use audio.mp3 in the main.py directory
 
 # usage
 uv run main.py [audio] [--model MODEL] [--runs N]
@@ -32,5 +33,5 @@ uv run main.py [audio] [--model MODEL] [--runs N]
 
 ## Results
 ```
-MBA M2 ram=8G model=medium -> 5.651s
+MBA M2 ram=8G model=medium -> 5.651s, 4.622s, 5.059s, 4.606s
 ```
